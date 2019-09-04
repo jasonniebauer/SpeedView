@@ -1,6 +1,6 @@
 'use strict';
 
-readOut = document.getElementById('speed');
+var readOut = document.getElementById('speed');
 
 function geo_success(position) {
     readOut.innerHTML(position.coords.speed)
@@ -18,7 +18,8 @@ var geo_options = {
 
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+        // navigator.geolocation.getCurrentPosition(showPosition);
+        navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
     } else {
         readOut.innerHTML = "Geolocation is not supported by this browser.";
     }
