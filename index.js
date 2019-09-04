@@ -3,18 +3,16 @@
 var readOut = document.getElementById('speed');
 
 function geo_success(position) {
-    readOut.innerHTML = position.coords.speed
+    alert(position.coords.speed)
+    // readOut.innerHTML = position.coords.speed
+    
 }
   
 function geo_error() {
     alert("Sorry, no position available.");
 }
 
-var geo_options = {
-    enableHighAccuracy: true, 
-    maximumAge        : 30000, 
-    timeout           : 27000
-};
+var geo_options = {enableHighAccuracy: true};
 
 function getLocation() {
     if (navigator.geolocation) {
