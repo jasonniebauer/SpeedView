@@ -3,7 +3,7 @@
 var readOut = document.getElementById('speed');
 
 function geo_success(position) {
-    readOut.innerHTML(position.coords.speed)
+    readOut.innerHTML = position.coords.speed
 }
   
 function geo_error() {
