@@ -5,6 +5,7 @@ var readOut = document.getElementById('speed');
 function geo_success(position) {
     speed = position.coords.speed * 2.236936;
     readOut.innerHTML = parseFloat(speed).toFixed(0);
+    console.log('Speed: ' + speed)
 }
   
 function geo_error() {
