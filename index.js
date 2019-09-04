@@ -3,9 +3,8 @@
 var readOut = document.getElementById('speed');
 
 function geo_success(position) {
-    alert(position.coords.speed)
-    // readOut.innerHTML = position.coords.speed
-    
+    speed = position.coords.speed * 2.236936;
+    readOut.innerHTML = parseFloat(speed).toFixed(0);
 }
   
 function geo_error() {
