@@ -1,38 +1,43 @@
 'use strict';
 
-var readOut = document.getElementById('speed');
+const options = {enableHighAccuracy: true};
 
-function geo_success(position) {
-    speed = position.coords.speed * 2.236936;
-    readOut.innerHTML = parseFloat(speed).toFixed(0);
-    console.log('Speed: ' + speed)
-}
-  
-function geo_error() {
-    alert("Sorry, no position available.");
-}
+var appOptions = {}
+var readout = document.querySelector('#readout');
+var readoutUnits = document.querySelector('#readoutUnits');
+var startButton = document.querySelector('#start');
 
-var geo_options = {enableHighAccuracy: true};
-
-function getLocation() {
-    if (navigator.geolocation) {
-        // navigator.geolocation.getCurrentPosition(showPosition);
-        navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
-    } else {
-        readOut.innerHTML = "Geolocation is not supported by this browser.";
-    }
+function parsePosition(position) {
+    var speed = position.coords.speed * 2.236936;
+    readout.innerHTML = parseFloat(speed).toFixed(0);
 }
 
-// if ("geolocation" in navigator) {
-//     /* geolocation is available */
-
-//     /* assign an ID number that can be used to uniquely identify the
-//     requested position watcher */
-//     var watchPositionID = navigator.geolocation.watchPosition(
-//         geo_success, geo_error, geo_options);
-
-//     /* stop watching user's location */
-//     // navigator.geolocation.clearWatch(watchID);
-// } else {
-//     /* geolocation IS NOT available */
+// function getLocation() {
+//     if (navigator.geolocation) {
+//         /* assign watch position ID */
+//         appOptions.watchID = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+//     } else {
+//         readout.innerHTML = "Geolocation is not supported by this browser.";
+//     }
 // }
+
+const toggleButton = () => {
+    startButton.classList.toggle('selected');
+}
+
+startButton.addEventListener('click', (event) => {
+
+    if (appOptions.watchID) {
+        /* clear user's watch ID */
+        navigator.geolocation.clearWatch(appOptions['watchID']);
+
+        appOptions.watchID = null;
+        startButton.textContent = 'Start';
+        // startButton.classList.toggle('selected');
+    } else {
+        appOptions.watchID = navigator.geolocation.watchPosition(parsePosition, null, options);
+        console.log('WATCH ID: ' + appOptions.watchID)
+        startButton.textContent = 'Stop';
+        // startButton.classList.toggle('selected');
+    }
+}, toggleButton())
