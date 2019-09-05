@@ -33,6 +33,7 @@ startButton.addEventListener('click', (event) => {
 
         appOptions.watchID = null;
         startButton.textContent = 'Start';
+        readout.innerHTML = 0
         // startButton.classList.toggle('selected');
     } else {
         appOptions.watchID = navigator.geolocation.watchPosition(parsePosition, null, options);
