@@ -1,25 +1,23 @@
 'use strict';
 
-const options = {enableHighAccuracy: true};
+const options = {
+    enableHighAccuracy: true,
+    maximumAge: 60000,
+    timeout: 27000
+};
 
 var appOptions = {}
 var readout = document.querySelector('#readout');
 var readoutUnits = document.querySelector('#readoutUnits');
 var readoutDistance = document.querySelector('#readoutDistance')
 var startButton = document.querySelector('#start');
+var distance;
+var maxSpeed;
+var averageSpeed;
 
 function parsePosition(position) {
     var speed = position.coords.speed * 2.236936;
     readout.innerHTML = parseFloat(speed).toFixed(0);
-
-    console.log(position.coords.speed);
-
-    var mile = 1609.344; // meters
-
-    if (position.coords.speed != null) {
-        var distance = mile / position.coords.speed;
-        readoutDistance.innerHTML = parseFloat(distance).toFixed(2);
-    }
 }
 
 // function getLocation() {
