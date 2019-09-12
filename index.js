@@ -1,9 +1,9 @@
 'use strict';
 
-const options = {
-    enableHighAccuracy: true,
-    maximumAge: 60000,
-    timeout: 27000
+const positionOptions = {
+    enableHighAccuracy: false,
+    maximumAge: 30000,  // 30 seconds in milliseconds
+    timeout: 27000  //  27 seconds in milliseconds
 };
 
 var appOptions = {}
@@ -19,6 +19,10 @@ function parsePosition(position) {
     var speed = position.coords.speed * 2.236936;
     readout.innerHTML = parseFloat(speed).toFixed(0);
 }
+
+function errorCallback(error) {
+  alert('ERROR(' + error.code + '): ' + error.message);
+};
 
 // function getLocation() {
 //     if (navigator.geolocation) {
@@ -44,7 +48,7 @@ startButton.addEventListener('click', (event) => {
         readout.innerHTML = 0
         // startButton.classList.toggle('selected');
     } else {
-        appOptions.watchID = navigator.geolocation.watchPosition(parsePosition, null, options);
+        appOptions.watchID = navigator.geolocation.watchPosition(parsePosition, errorCallback, positionOptions);
         console.log('WATCH ID: ' + appOptions.watchID)
         startButton.textContent = 'Stop';
         // startButton.classList.toggle('selected');
