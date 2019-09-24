@@ -1,7 +1,7 @@
 'use strict';
 
 const positionOptions = {
-    enableHighAccuracy: false,
+    enableHighAccuracy: true,
     maximumAge: 30000,  // 30 seconds in milliseconds
     timeout: 27000  //  27 seconds in milliseconds
 };
