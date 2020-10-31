@@ -1,28 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8"/>
-        <meta name="author" content="">
-        <meta name="copyright" content="">
-        <meta name="description" content="">
-        <meta name="keywords" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-        <meta name="theme-color" content="#222222">
-        <!-- <link rel="manifest" href="/manifest.json">
-        <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png"/>
-        <link rel="apple-touch-icon" href="touch-icon-iphone.png">
-        <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad.png">
-        <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png">
-        <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-retina.png"> -->
-        <title>SpeedView</title>
-        <link rel="stylesheet" href="css/reset.min.css">
-        <link rel="stylesheet" href="css/litespeed.css">
-    </head>
-    <body>
-        <h1 id="readout" class="readout">...</h1>
-        <h3 id="readoutUnits" class="readout-units">MPH</h3>
-        <p class="readout-distance">Distance (mi): <span id="readoutDistance">0</span></p>
-        <button id="start" class="btn btn-primary">Start</button>
-        <script src="index.js"></script>
-    </body>
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="author" content="Jason Niebauer">
+    <meta name="copyright" content="">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#222222">
+    <!-- <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png"/>
+    <link rel="apple-touch-icon" href="touch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-retina.png"> -->
+    <title>SpeedView</title>
+    <link rel="stylesheet" href="css/reset.min.css">
+    <link rel="stylesheet" href="css/litespeed.css">
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- production version, optimized for size and speed -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> -->
+  </head>
+  <body>
+    <div id="app">
+      <h1
+        id="readout"
+        class="readout">
+        {{ readout }}
+      </h1>
+      <h3 id="readoutUnits" class="readout-units">MPH</h3>
+      <button
+        id="start"
+        class="btn btn-primary"
+        @click="trackSpeed"
+      >
+        {{ buttonText }}
+      </button>
+    </div>    
+    <script>
+      const app = new Vue({
+        el: '#app',
+        data: {
+          appOptions: {},
+          readout: '...',
+          buttonText: 'Start',
+          running: false,
+          positionOptions: {
+            enableHighAccuracy: true,
+            maximumAge: 30000,  // 30 seconds in milliseconds
+            timeout: 27000  //  27 seconds in milliseconds
+          }
+        },
+        methods: {
+          test() {
+            console.log('wow');
+          },
+          clearWatchId() {
+            /* clear user's watch ID */
+            navigator.geolocation.clearWatch(
+              this.appOptions['watchID']
+            );
+          },
+          errorCallback(error) {
+            alert('ERROR(' + error.code + '): ' + error.message);
+          },
+          parsePosition(position) {
+            let speed = position.coords.speed * 2.236936;
+            this.readout = parseFloat(speed).toFixed(0);
+          },
+          trackSpeed() {
+            /* Check if a watch ID has been recorded for the user */
+            if (this.appOptions.watchID) {
+              this.clearWatchId();
+              this.appOptions.watchID = null;
+              this.buttonText = 'Start';
+              readout.innerHTML = 0
+            } else {
+                this.appOptions.watchID = navigator.geolocation.watchPosition(
+                  this.parsePosition,
+                  this.errorCallback,
+                  this.positionOptions
+                );
+                // console.log('WATCH ID: ' + this.appOptions.watchID);
+                this.buttonText = 'Stop';
+            }
+          }
+        },
+        computed: {
+
+        }
+      });
+    </script>
+  </body>
 </html>
