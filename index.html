@@ -24,18 +24,15 @@
   </head>
   <body>
     <div id="app">
-      <h1
-        id="readout"
-        class="readout">
+      <h1 class="readout">
         {{ readout }}
       </h1>
-      <h3 id="readoutUnits" class="readout-units">MPH</h3>
+      <h3 class="readout-units">MPH</h3>
       <button
-        id="start"
         class="btn btn-primary"
-        @click="trackSpeed"
+        @click="toggleSpeedTracking"
       >
-        {{ buttonText }}
+        {{ callToActionText }}
       </button>
     </div>    
     <script>
@@ -43,9 +40,9 @@
         el: '#app',
         data: {
           appOptions: {},
-          readout: '...',
-          buttonText: 'Start',
+          speed: null,
           running: false,
+          geolocationAvailable: false,
           positionOptions: {
             enableHighAccuracy: true,
             maximumAge: 30000,  // 30 seconds in milliseconds
@@ -53,9 +50,6 @@
           }
         },
         methods: {
-          test() {
-            console.log('wow');
-          },
           clearWatchId() {
             /* clear user's watch ID */
             navigator.geolocation.clearWatch(
@@ -63,32 +57,47 @@
             );
           },
           errorCallback(error) {
+            this.running = false;
+            this.speed = null;
             alert('ERROR(' + error.code + '): ' + error.message);
           },
           parsePosition(position) {
-            let speed = position.coords.speed * 2.236936;
-            this.readout = parseFloat(speed).toFixed(0);
+            this.speed = position.coords.speed * 2.236936;
           },
-          trackSpeed() {
-            /* Check if a watch ID has been recorded for the user */
-            if (this.appOptions.watchID) {
+          toggleSpeedTracking() {
+            if (!this.running) {
+              this.appOptions.watchID = navigator.geolocation.watchPosition(
+                this.parsePosition, // success
+                this.errorCallback, // error
+                this.positionOptions // options
+              );
+              this.running = true;
+            }
+            else {
               this.clearWatchId();
               this.appOptions.watchID = null;
-              this.buttonText = 'Start';
-              readout.innerHTML = 0
-            } else {
-                this.appOptions.watchID = navigator.geolocation.watchPosition(
-                  this.parsePosition,
-                  this.errorCallback,
-                  this.positionOptions
-                );
-                // console.log('WATCH ID: ' + this.appOptions.watchID);
-                this.buttonText = 'Stop';
+              this.speed = 0;
+              this.running = false;
             }
           }
         },
         computed: {
-
+          callToActionText() {
+            if (this.running) {
+              return 'Stop';
+            }
+            else {
+              return 'Start';
+            }
+          },
+          readout() {
+            if (this.speed !== null) {
+              return parseFloat(this.speed).toFixed(0);
+            }
+            else {
+              return '...';
+            }
+          }
         }
       });
     </script>
