@@ -62,7 +62,9 @@
             alert('ERROR(' + error.code + '): ' + error.message);
           },
           parsePosition(position) {
-            this.speed = position.coords.speed * 2.236936;
+            this.speed = parseFloat(
+              position.coords.speed * 2.236936
+            ).toFixed(0);
           },
           toggleSpeedTracking() {
             if (!this.running) {
@@ -91,12 +93,7 @@
             }
           },
           readout() {
-            if (this.speed !== null) {
-              return parseFloat(this.speed).toFixed(0);
-            }
-            else {
-              return '...';
-            }
+            this.speed ? this.speed : '...';
           }
         }
       });
