@@ -93,7 +93,7 @@
             }
           },
           readout() {
-            this.speed ? this.speed : '...';
+            return this.speed !== null ? this.speed : '...';
           }
         }
       });
