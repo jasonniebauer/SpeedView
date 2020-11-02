@@ -25,7 +25,7 @@
   <body>
     <div id="app">
       <h1 class="readout">
-        {{ readout }}
+        {{ speed }}
       </h1>
       <h3 class="readout-units">MPH</h3>
       <button
@@ -40,9 +40,8 @@
         el: '#app',
         data: {
           appOptions: {},
-          speed: null,
+          speed: '...',
           running: false,
-          geolocationAvailable: false,
           positionOptions: {
             enableHighAccuracy: true,
             maximumAge: 30000,  // 30 seconds in milliseconds
@@ -91,9 +90,6 @@
             else {
               return 'Start';
             }
-          },
-          readout() {
-            return this.speed !== null ? this.speed : '...';
           }
         }
       });
